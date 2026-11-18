@@ -23,32 +23,30 @@ function RR_RollFrame_SortOutSize()
 		end
 	end
 	
-	if RR_RollCheckBox_ShowRanks_panel ~= nil then
-		if  RR_RollCheckBox_ShowRanks_panel:GetChecked() then
-			RR_RollFrame:SetWidth(265+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"])
-		else
-			RR_RollFrame:SetWidth(215+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"])
-		end
-		
-		if RR_RollCheckBox_ShowGroupNumber_panel:GetChecked() then
-			--RR_RollFrame:SetWidth(215+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"])
-		else
-			RR_RollFrame:SetWidth(RR_RollFrame:GetWidth() - 30)
-		end	
-
-		-- Leave room for PR and the roll without overlapping the group column.
-		local extraRollWidth = 0
-		local settings = RaidRoll_DBPC[UnitName("player")]
-		if settings["RR_EPGP_Enabled"] == true and settings["RR_Show_Roll_EPGP"] == true then
-			local columnWidth = RR_Rolled:GetStringWidth()
-			for i=1,visibleRows do
-				columnWidth = math.max(columnWidth, _G["RR_Rolled"..i]:GetStringWidth())
-			end
-			extraRollWidth = math.max(0, columnWidth + 10 - 50)
-		end
-		RR_Group0:ClearAllPoints()
-		RR_Group0:SetPoint("TOPLEFT", RR_Rolled, "TOPLEFT", 50 + extraRollWidth, 0)
-		RR_RollFrame:SetWidth(RR_RollFrame:GetWidth() + extraRollWidth)
+	-- Use the same saved settings for column positions, visibility and frame width.
+	-- Checkbox state can still be unset while the character's UI is loading.
+	local showRanks = settings["RR_Show_Ranks"] == true
+	local showGroups = settings["RR_ShowGroupNumber"] == true
+	if showRanks then Raid_Roll_Rank_String0:Show() else Raid_Roll_Rank_String0:Hide() end
+	if showGroups then RR_Group0:Show() else RR_Group0:Hide() end
+	local extraWidth = math.max(0, tonumber(settings["RR_ExtraWidth"]) or 0)
+	local rollX = (showRanks and 170 or 120) + extraWidth
+	local columnWidth = RR_Rolled:GetStringWidth()
+	local groupWidth = RR_Group0:GetStringWidth()
+	for i=1,visibleRows do
+		columnWidth = math.max(columnWidth, _G["RR_Rolled"..i]:GetStringWidth())
+		groupWidth = math.max(groupWidth, _G["RR_Group"..i]:GetStringWidth())
+	end
+	columnWidth = math.max(50, columnWidth + 10)
+	RR_Rolled:ClearAllPoints()
+	RR_Rolled:SetPoint("TOPLEFT", RR_RollFrame, "TOPLEFT", rollX, -30)
+	RR_Group0:ClearAllPoints()
+	RR_Group0:SetPoint("TOPLEFT", RR_Rolled, "TOPLEFT", columnWidth, 0)
+	local rightMargin = showGroups and (math.max(25, groupWidth) + 20) or 15
+	RR_RollFrame:SetWidth(rollX + columnWidth + rightMargin)
+	if RR_RollModeButton then
+		RR_RollModeButton:SetText(settings["RR_EPGP_Enabled"] == true and "EPGP" or "Roll")
+		Raid_Roll_Name:SetWidth(math.min(150, RR_RollFrame:GetWidth() - 100))
 	end
 end
 
@@ -95,6 +93,15 @@ function RR_ExtraFrame_Options()
 	Raid_Roll_Name_String:SetJustifyH("LEFT")
 	
 	Raid_Roll_Name_String:SetText("Musou's Raid Roller")
+
+	RR_RollModeButton = CreateFrame("Button", "RR_RollModeButton", RR_RollFrame, "UIPanelButtonTemplate")
+	RR_RollModeButton:SetWidth(48)
+	RR_RollModeButton:SetHeight(18)
+	RR_RollModeButton:SetPoint("TOPRIGHT", RR_RollFrame, "TOPRIGHT", -30, -6)
+	RR_RollModeButton:SetText(RaidRoll_DBPC[UnitName("player")]["RR_EPGP_Enabled"] == true and "EPGP" or "Roll")
+	RR_RollModeButton:SetScript("OnClick", RR_ToggleRollMode)
+	RR_RollModeButton:SetScript("OnEnter", function(self) RR_MouseOverTooltip(self:GetName()) end)
+	RR_RollModeButton:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
 
 --------------------------------------------------------------

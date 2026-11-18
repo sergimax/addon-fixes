@@ -548,9 +548,9 @@ function Setup_RR_Panel()
  
  
   RaidRoll_ExtraWidth_Slider:SetScript("OnValueChanged",function()
+	RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"] = RaidRoll_ExtraWidth_Slider:GetValue()
 	RaidRoll_CheckButton_Update_Panel()
 	_G[RaidRoll_ExtraWidth_Slider:GetName() .. 'Text']:SetText(RaidRoll_ExtraWidth_Slider:GetValue());
-	RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"] = RaidRoll_ExtraWidth_Slider:GetValue()
   end)
  ----------------------------------------------------
  
@@ -911,56 +911,9 @@ function RaidRoll_CheckButton_Update_Panel()
 	
 	
 	
-	if  RR_RollCheckBox_ShowRanks_panel:GetChecked() then
-		RaidRoll_DBPC[UnitName("player")]["RR_Show_Ranks"] =  true
-		--RR_RollCheckBox_ShowRanks:SetChecked(true)
-		RR_RollCheckBox_ShowRanks_panel:SetChecked(true)
-		for i=1,11 do
-			_G["Raid_Roll_Rank_String"..i-1]:Show()
-		end
-		RR_RollFrame:SetWidth(265+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"])
-		_G["RR_Rolled"]:ClearAllPoints()
-		_G["RR_Rolled"]:SetPoint("TOPLEFT", _G["RR_RollFrame"], "TOPLEFT",170+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"],-30)
-		
-		_G["RR_Group0"]:ClearAllPoints()
-		_G["RR_Group0"]:SetPoint("TOPLEFT", _G["RR_RollFrame"], "TOPLEFT",220+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"],-30)
-	else
-		RaidRoll_DBPC[UnitName("player")]["RR_Show_Ranks"] =  false
-		--RR_RollCheckBox_ShowRanks:SetChecked(false)
-		RR_RollCheckBox_ShowRanks_panel:SetChecked(false)
-		for i=1,11 do
-			
-			_G["Raid_Roll_Rank_String"..i-1]:Hide()
-		end
-		RR_RollFrame:SetWidth(215+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"])
-		_G["RR_Rolled"]:ClearAllPoints()
-		_G["RR_Rolled"]:SetPoint("TOPLEFT", _G["RR_RollFrame"], "TOPLEFT",120+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"],-30)
-		
-		_G["RR_Group0"]:ClearAllPoints()
-		_G["RR_Group0"]:SetPoint("TOPLEFT", _G["RR_RollFrame"], "TOPLEFT",170+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"],-30)
-		
-	end
-	
-	if RR_RollCheckBox_ShowGroupNumber_panel:GetChecked() then
-		RaidRoll_DBPC[UnitName("player")]["RR_ShowGroupNumber"] =  true
-		RR_RollCheckBox_ShowGroupNumber_panel:SetChecked(true)
-		
-		for i=1,11 do
-			_G["RR_Group"..i-1]:Show()
-		end
-		
-		--RR_RollFrame:SetWidth(215+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"])
-	else
-		RaidRoll_DBPC[UnitName("player")]["RR_ShowGroupNumber"] =  false
-		RR_RollCheckBox_ShowGroupNumber_panel:SetChecked(false)
-		
-		for i=1,11 do
-			_G["RR_Group"..i-1]:Hide()
-		end
-		
-		RR_RollFrame:SetWidth(RR_RollFrame:GetWidth() - 30)
-	end
-	
+	RaidRoll_DBPC[UnitName("player")]["RR_Show_Ranks"] = RR_RollCheckBox_ShowRanks_panel:GetChecked() and true or false
+	RaidRoll_DBPC[UnitName("player")]["RR_ShowGroupNumber"] = RR_RollCheckBox_ShowGroupNumber_panel:GetChecked() and true or false
+
 	if RR_RollCheckBox_ShowClassColors_panel:GetChecked() then
 		RaidRoll_DBPC[UnitName("player")]["RR_ShowClassColors"] =  true
 		RR_RollCheckBox_ShowClassColors_panel:SetChecked(true)

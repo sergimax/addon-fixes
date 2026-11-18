@@ -1050,6 +1050,17 @@ end
 -- rr_AddedPlayer = if we added a player this is true, otherwise it is false (for re-sorting)
 
 
+function RR_ToggleRollMode()
+	local settings = RaidRoll_DBPC[UnitName("player")]
+	settings["RR_EPGP_Enabled"] = not settings["RR_EPGP_Enabled"]
+	RR_RollCheckBox_EPGPMode_panel:SetChecked(settings["RR_EPGP_Enabled"])
+	RR_ScrollOffset = 0
+	for rollID in pairs(MaxPlayers) do
+		rr_RollSort(rollID)
+	end
+	RR_Display(rr_CurrentRollID)
+end
+
 function rr_RollSort(rr_rollID,PlayerRoll,PlayerName,rr_AddedPlayer,rr_FirstRoll,RR_LegitRoll,LowHigh)
 
 
@@ -1057,6 +1068,7 @@ function rr_RollSort(rr_rollID,PlayerRoll,PlayerName,rr_AddedPlayer,rr_FirstRoll
 		
 
 local temp
+local MaxPlayersValue = math.max(5, MaxPlayers[rr_rollID] or 0)
 
 --if rr_rollID == nil then rr_rollID = rr_CurrentRollID end 
 

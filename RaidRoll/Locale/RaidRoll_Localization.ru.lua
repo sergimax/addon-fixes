@@ -1,6 +1,7 @@
 ﻿
 
 if (GetLocale() == "ruRU") then
+RAIDROLL_LOCALE["RR_RollModeButton"] = "Переключить разролл между EPGP и обычным броском.\nНа кнопке указан текущий режим.\nМеняет сортировку игроков и выбор победителя."
 RAIDROLL_LOCALE["Show_Ten_Players"] = "Показывать 10 игроков"
 RAIDROLL_LOCALE["RR_RollCheckBox_ShowTenPlayers"] = "Показывать 10 игроков в окне разролла.\nВыключите, чтобы показывать 5 игроков."
 
