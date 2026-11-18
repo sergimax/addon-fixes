@@ -1,6 +1,7 @@
 ## Interface: 30300
 ## X-Compatible-With: 40000
 ## Title: Raid Roll
+## Version: v1.0.0-a
 ## Author: Musou
 ## Notes: An addon that can be used to perform Raid Rolls
 ## email: killerpet@gmail.com
