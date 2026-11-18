@@ -2,6 +2,9 @@
 
 if (GetLocale() == "ruRU") then
 
+RAIDROLL_LOCALE["Show_Roll_EPGP"] = "Показывать /roll рядом с PR"
+RAIDROLL_LOCALE["RR_RollCheckBox_Show_Roll_EPGP"] = "Показывает PR и результат броска в EPGP-режиме.\nПобедитель по-прежнему определяется по EPGP.\n\nПо умолчанию: выключено"
+
 RAIDROLL_LOCALE["10_Sec_Announce_Winner"] = "10 сек + Анонс победителя"
 RAIDROLL_LOCALE["added_to_marking_list"] = "добавлена метка в список."
 -- RAIDROLL_LOCALE["All_marks_cleared"] = ""

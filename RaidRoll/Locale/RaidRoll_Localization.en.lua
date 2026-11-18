@@ -3,6 +3,8 @@ RAIDROLL_LOCALE = {}
 
 RAIDROLL_LOCALE["Mark_Them"] = "Are you sure you want to mark %s?"
 RAIDROLL_LOCALE["Enable_Alt_Mode"] = "Enable Alt Mode"
+RAIDROLL_LOCALE["Show_Roll_EPGP"] = "Show /roll alongside PR"
+RAIDROLL_LOCALE["RR_RollCheckBox_Show_Roll_EPGP"] = "Shows PR / Roll in EPGP mode.\nThe winner is still chosen by EPGP priority.\n\nRecommended: Off"
 RAIDROLL_LOCALE["Raid_Roll_Misc_Settings"] = "Misc Settings"
 RAIDROLL_LOCALE["Track_Bids"] = "Track !bid"
 RAIDROLL_LOCALE["RR_RollCheckBox_Enable_Alt_Mode"] = "Shows the main characters PR value \nif an alt is detected in the raid. \n(An alt will have the mains name in \nofficer note instead of an EP or GP value) \n\n Recommended: Off "

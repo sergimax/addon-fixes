@@ -340,6 +340,22 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_Enable_Alt_Mode:SetScript("OnClick",RaidRoll_CheckButton_Update_Panel)
 	RR_RollCheckBox_Enable_Alt_Mode:SetScript("OnEnter",function(self) RR_MouseOverTooltip(self:GetName())	end)
 	RR_RollCheckBox_Enable_Alt_Mode:SetScript("OnLeave", function() GameTooltip:Hide()	end)
+
+-- [ ] Show /roll alongside PR
+	RR_RollCheckBox_Show_Roll_EPGP = CreateFrame("CheckButton", "RR_RollCheckBox_Show_Roll_EPGP", RaidRoll_Panel.panel, "UICheckButtonTemplate")
+	RR_RollCheckBox_Show_Roll_EPGP:SetWidth(15)
+	RR_RollCheckBox_Show_Roll_EPGP:SetHeight(15)
+	RR_RollCheckBox_Show_Roll_EPGP:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft", 40, -295)
+	_G["RR_RollCheckBox_Show_Roll_EPGPText"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Show_Roll_EPGP"])
+	if (GetLocale() ~= "zhTW") then
+		_G["RR_RollCheckBox_Show_Roll_EPGPText"]:SetFont("Fonts\\FRIZQT__.TTF", 10)
+	end
+	if (GetLocale() == "zhCN") then
+		_G["RR_RollCheckBox_Show_Roll_EPGPText"]:SetFont("Fonts\\ZYKai_T.TTF", 14)
+	end
+	RR_RollCheckBox_Show_Roll_EPGP:SetScript("OnClick", RaidRoll_CheckButton_Update_Panel)
+	RR_RollCheckBox_Show_Roll_EPGP:SetScript("OnEnter", function(self) RR_MouseOverTooltip(self:GetName()) end)
+	RR_RollCheckBox_Show_Roll_EPGP:SetScript("OnLeave", function() GameTooltip:Hide() end)
 	
 	
 	
@@ -975,6 +991,8 @@ function RaidRoll_CheckButton_Update_Panel()
 		RR_RollCheckBox_Enable_Alt_Mode:SetChecked(false)
 	end
 
+	RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"] = RR_RollCheckBox_Show_Roll_EPGP:GetChecked() and true or false
+	RR_RollFrame_SortOutSize()
 	
 	rr_RollSort(rr_CurrentRollID)
 	

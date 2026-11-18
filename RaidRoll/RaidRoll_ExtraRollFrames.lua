@@ -15,6 +15,20 @@ function RR_RollFrame_SortOutSize()
 		else
 			RR_RollFrame:SetWidth(RR_RollFrame:GetWidth() - 30)
 		end	
+
+		-- Leave room for PR and the roll without overlapping the group column.
+		local extraRollWidth = 0
+		local settings = RaidRoll_DBPC[UnitName("player")]
+		if settings["RR_EPGP_Enabled"] == true and settings["RR_Show_Roll_EPGP"] == true then
+			local columnWidth = RR_Rolled:GetStringWidth()
+			for i=1,5 do
+				columnWidth = math.max(columnWidth, _G["RR_Rolled"..i]:GetStringWidth())
+			end
+			extraRollWidth = math.max(0, columnWidth + 10 - 50)
+		end
+		RR_Group0:ClearAllPoints()
+		RR_Group0:SetPoint("TOPLEFT", RR_Rolled, "TOPLEFT", 50 + extraRollWidth, 0)
+		RR_RollFrame:SetWidth(RR_RollFrame:GetWidth() + extraRollWidth)
 	end
 end
 

@@ -1821,6 +1821,16 @@ l_RR_DisplayID = RR_DisplayID
 						else
 							_G["RR_Rolled"..i]:SetText("|cFFABD473" .. RR_EPGP_PRValue[RR_DisplayID][i+RR_ScrollOffset])	-- above threshold (green)
 						end
+						if RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"] == true then
+							local rollText = RollerRoll[RR_DisplayID][i+RR_ScrollOffset]
+							if RaidRoll_LegitRoll[RR_DisplayID][i+RR_ScrollOffset] ~= true then
+								rollText = rollText .. "*"
+							end
+							if RollerFirst[RR_DisplayID][i+RR_ScrollOffset] ~= true then
+								rollText = "(" .. Roll_Number[RR_DisplayID][i+RR_ScrollOffset] .. ") " .. rollText
+							end
+							_G["RR_Rolled"..i]:SetText(_G["RR_Rolled"..i]:GetText() .. "|r / " .. color .. rollText .. "|r")
+						end
 					else
 						RR_Rolled:SetText("Roll")
 						if RaidRoll_LegitRoll[RR_DisplayID][i+RR_ScrollOffset] == true then
@@ -1862,6 +1872,15 @@ l_RR_DisplayID = RR_DisplayID
 			end
 		end
 	end
+
+	if RaidRoll_DBPC[UnitName("player")]["RR_EPGP_Enabled"] == true and RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"] == true then
+		RR_Rolled:SetText("PR / Roll")
+	elseif RaidRoll_DBPC[UnitName("player")]["RR_EPGP_Enabled"] == true then
+		RR_Rolled:SetText("PR")
+	else
+		RR_Rolled:SetText("Roll")
+	end
+	RR_RollFrame_SortOutSize()
 
 	-- This controls the showing of the window (true = show window, false = dont show window)
 		if RaidRoll_DBPC[UnitName("player")]["RR_Roll_Tracking_Enabled"] == true then
@@ -2913,6 +2932,11 @@ function RR_SetupVariables()
 		RaidRoll_DBPC[UnitName("player")]["RR_RollCheckBox_Enable_Alt_Mode"] = true
 		RR_RollCheckBox_Enable_Alt_Mode:SetChecked(true)
 	end
+
+	if RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"] == nil then
+		RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"] = false
+	end
+	RR_RollCheckBox_Show_Roll_EPGP:SetChecked(RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"])
 
 	
 	
