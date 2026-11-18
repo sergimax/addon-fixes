@@ -394,7 +394,7 @@ function RR_MouseOverTooltip(ID)
 	if ID ~= nil then
 		if string.find(ID, "Raid_Roll_SetSymbol") then
 		
-		CharID = tonumber(string.sub(ID,20))
+		CharID = tonumber(string.sub(ID,20)) + (RR_ScrollOffset or 0)
 		
 		if RaidRoll_DB["debug"] == true then
 			RR_Test(ID)
@@ -546,50 +546,26 @@ function RR_ClearAllData_Startup()
   
 end
 
-function RaidRoll_Window_Scroll(direction)
-
--- Debugging, shows the direction and value
-if RaidRoll_DB["debug"] == true then RR_Test(direction) end
-if RaidRoll_DB["debug"] == true then RR_Test(RaidRoll_Slider:GetValue()) end
-
--- Dont scroll unless a maxplayers value exists
-	if MaxPlayers[rr_CurrentRollID] ~= nil then
-		if MaxPlayers[rr_CurrentRollID] >= 5 then
-			RaidRoll_MaxNumber = MaxPlayers[rr_CurrentRollID]-4
-		--else
-			--RaidRoll_MaxNumber = 1
-		--end
-			
-			RaidRoll_MaxNumber_Slider = RaidRoll_MaxNumber
-			
-			if rr_CurrentRollID > 0 and RaidRoll_MaxNumber > 1 then RaidRoll_MaxNumber_Slider = RaidRoll_MaxNumber - 1 end
-			
-			RaidRoll_Slider:SetMinMaxValues(1, RaidRoll_MaxNumber_Slider)
-			
-			
-			RaidRoll_Slider:SetValue(RaidRoll_Slider:GetValue() - (direction * 3))
-			
-			if RaidRoll_Slider:GetValue() > RaidRoll_MaxNumber then
-				RaidRoll_Slider:SetValue(RaidRoll_MaxNumber)
-			end
-			
-			RR_ScrollOffset = RaidRoll_Slider:GetValue() - 1
-			
-			--for i=1, 5 do
-				--if InviteHelper_Position[i+RaidRoll_Slider:GetValue()] ~= nil then
-				--	_G["InviteHelper_GMButton_name" .. i]:SetText(i+RaidRoll_Slider:GetValue() - 1 .. ": " .. RaidRoll_Position[i+RaidRoll_Slider:GetValue()])		
-				--else
-				--	_G["InviteHelper_GMButton_name" .. i]:SetText("")	
-				--end
-			--end
-			
-		 --RaidRoll_Slider.tooltipText = RaidRoll_Slider:GetValue() .. " - " .. RaidRoll_Slider:GetValue() + 4
-		 
-			RR_Display(rr_CurrentRollID)
-			
-			
-		end
+-- Keep the slider and the visible page in sync, including after changing row count.
+function RR_UpdateScrollRange(displayID)
+	if not RaidRoll_Slider then return end
+	local count = MaxPlayers[displayID] or 0
+	-- Item rolls include an empty entry created when the roll starts.
+	if displayID > 0 then count = math.max(0, count - 1) end
+	local maximum = math.max(1, count - RR_GetVisibleRows() + 1)
+	RR_ScrollOffset = math.max(0, math.min(RR_ScrollOffset or 0, maximum - 1))
+	RR_UpdatingScrollRange = true
+	RaidRoll_Slider:SetMinMaxValues(1, maximum)
+	if RaidRoll_Slider:GetValue() ~= RR_ScrollOffset + 1 then
+		RaidRoll_Slider:SetValue(RR_ScrollOffset + 1)
 	end
+	RR_UpdatingScrollRange = false
+end
+
+function RaidRoll_Window_Scroll(direction)
+	if RR_UpdatingScrollRange then return end
+	RR_ScrollOffset = RaidRoll_Slider:GetValue() - 1 - (direction * 3)
+	RR_Display(rr_CurrentRollID)
 end
 
 -- TOGGLE THE OPTIONS MENU
@@ -935,12 +911,7 @@ local High = tonumber(High)
 	end
 	
 -- update scrollbar
-	if MaxPlayers[rr_CurrentRollID] and MaxPlayers[rr_CurrentRollID] >= 5 then
-		RaidRoll_MaxNumber = MaxPlayers[rr_CurrentRollID]-4
-		RaidRoll_MaxNumber_Slider = RaidRoll_MaxNumber
-		if rr_CurrentRollID > 0 and RaidRoll_MaxNumber > 1 then RaidRoll_MaxNumber_Slider = RaidRoll_MaxNumber - 1 end
-		RaidRoll_Slider:SetMinMaxValues(1, RaidRoll_MaxNumber_Slider)
-	end
+	RR_UpdateScrollRange(rr_CurrentRollID)
 	
 end
 
@@ -1728,6 +1699,8 @@ RR_HasDisplayedAlready = true
 
 l_RR_DisplayID = RR_DisplayID
 
+	RR_UpdateScrollRange(RR_DisplayID)
+
 	if RollerGroup[l_RR_DisplayID] == nil then RollerGroup[l_RR_DisplayID] = {} end
 
 ---If the current roll is the latest rol it shows a 60 second countdown
@@ -1739,7 +1712,7 @@ l_RR_DisplayID = RR_DisplayID
 	end
 	
 	if RollerFirst[RR_DisplayID] ~= nil and RollerFirst[RR_DisplayID][1] ~= nil then
-		for i=1,5 do
+		for i=1,RR_GetVisibleRows() do
 			
 			--To make sure these are not nil values
 			mark = ""
@@ -1747,6 +1720,11 @@ l_RR_DisplayID = RR_DisplayID
 			
 			_G["RR_RollerPos"..i]:SetText(i + RR_ScrollOffset .. ":")
 			
+			if not RollerName[RR_DisplayID][i+RR_ScrollOffset] or RollerName[RR_DisplayID][i+RR_ScrollOffset] == "" then
+				for _, prefix in ipairs({"RR_Roller", "RR_Rolled", "Raid_Roll_Rank_String", "RR_Group"}) do
+					_G[prefix..i]:SetText("")
+				end
+			else
 			if RollerFirst[RR_DisplayID][i+RR_ScrollOffset] == false then
 				color = "|cFF11aacc"
 			else
@@ -1869,6 +1847,7 @@ l_RR_DisplayID = RR_DisplayID
 				
 				if RollerGroup[RR_DisplayID][i+RR_ScrollOffset] == nil then RollerGroup[RR_DisplayID][i+RR_ScrollOffset] = "" end
 				_G["RR_Group"..i]:SetText(color .. RollerGroup[RR_DisplayID][i+RR_ScrollOffset])
+			end
 			end
 		end
 	end
@@ -2649,7 +2628,7 @@ function RaidRoll_CheckButton_Update()
 		RR_Display(rr_CurrentRollID)
 	end
 	
-	for i=1,5 do
+	for i=1,10 do
 		_G["Raid_Roll_Rank_String"..i]:SetWidth(65+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"]); 
 	end
 	
@@ -2937,6 +2916,11 @@ function RR_SetupVariables()
 		RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"] = false
 	end
 	RR_RollCheckBox_Show_Roll_EPGP:SetChecked(RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"])
+
+	if RaidRoll_DBPC[UnitName("player")]["RR_ShowTenPlayers"] == nil then
+		RaidRoll_DBPC[UnitName("player")]["RR_ShowTenPlayers"] = true
+	end
+	RR_RollCheckBox_ShowTenPlayers:SetChecked(RaidRoll_DBPC[UnitName("player")]["RR_ShowTenPlayers"])
 
 	
 	

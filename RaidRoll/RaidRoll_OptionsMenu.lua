@@ -280,6 +280,22 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_ShowClassColors_panel:SetScript("OnLeave", function() GameTooltip:Hide()	end)
 
 	
+-- [ ] Show ten players
+	RR_RollCheckBox_ShowTenPlayers = CreateFrame("CheckButton", "RR_RollCheckBox_ShowTenPlayers", RaidRoll_Panel.panel, "UICheckButtonTemplate")
+	RR_RollCheckBox_ShowTenPlayers:SetWidth(20)
+	RR_RollCheckBox_ShowTenPlayers:SetHeight(20)
+	RR_RollCheckBox_ShowTenPlayers:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft", 240, -200)
+	_G["RR_RollCheckBox_ShowTenPlayersText"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Show_Ten_Players"])
+	if (GetLocale() ~= "zhTW") then
+		_G["RR_RollCheckBox_ShowTenPlayersText"]:SetFont("Fonts\\FRIZQT__.TTF", 12)
+	end
+	if (GetLocale() == "zhCN") then
+		_G["RR_RollCheckBox_ShowTenPlayersText"]:SetFont("Fonts\\ZYKai_T.TTF", 15)
+	end
+	RR_RollCheckBox_ShowTenPlayers:SetScript("OnClick", RaidRoll_CheckButton_Update_Panel)
+	RR_RollCheckBox_ShowTenPlayers:SetScript("OnEnter", function(self) RR_MouseOverTooltip(self:GetName()) end)
+	RR_RollCheckBox_ShowTenPlayers:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
 -- EPGP Settings
 	Raid_Roll_EPGP_Settings =  RaidRoll_Panel.panel:CreateFontString("Raid_Roll_EPGP_Settings" ,"ARTWORK","GameFontNormal");
 	Raid_Roll_EPGP_Settings:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft", 20, -230)
@@ -899,7 +915,7 @@ function RaidRoll_CheckButton_Update_Panel()
 		RaidRoll_DBPC[UnitName("player")]["RR_Show_Ranks"] =  true
 		--RR_RollCheckBox_ShowRanks:SetChecked(true)
 		RR_RollCheckBox_ShowRanks_panel:SetChecked(true)
-		for i=1,6 do
+		for i=1,11 do
 			_G["Raid_Roll_Rank_String"..i-1]:Show()
 		end
 		RR_RollFrame:SetWidth(265+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"])
@@ -912,7 +928,7 @@ function RaidRoll_CheckButton_Update_Panel()
 		RaidRoll_DBPC[UnitName("player")]["RR_Show_Ranks"] =  false
 		--RR_RollCheckBox_ShowRanks:SetChecked(false)
 		RR_RollCheckBox_ShowRanks_panel:SetChecked(false)
-		for i=1,6 do
+		for i=1,11 do
 			
 			_G["Raid_Roll_Rank_String"..i-1]:Hide()
 		end
@@ -929,7 +945,7 @@ function RaidRoll_CheckButton_Update_Panel()
 		RaidRoll_DBPC[UnitName("player")]["RR_ShowGroupNumber"] =  true
 		RR_RollCheckBox_ShowGroupNumber_panel:SetChecked(true)
 		
-		for i=1,6 do
+		for i=1,11 do
 			_G["RR_Group"..i-1]:Show()
 		end
 		
@@ -938,7 +954,7 @@ function RaidRoll_CheckButton_Update_Panel()
 		RaidRoll_DBPC[UnitName("player")]["RR_ShowGroupNumber"] =  false
 		RR_RollCheckBox_ShowGroupNumber_panel:SetChecked(false)
 		
-		for i=1,6 do
+		for i=1,11 do
 			_G["RR_Group"..i-1]:Hide()
 		end
 		
@@ -992,6 +1008,7 @@ function RaidRoll_CheckButton_Update_Panel()
 	end
 
 	RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"] = RR_RollCheckBox_Show_Roll_EPGP:GetChecked() and true or false
+	RaidRoll_DBPC[UnitName("player")]["RR_ShowTenPlayers"] = RR_RollCheckBox_ShowTenPlayers:GetChecked() and true or false
 	RR_RollFrame_SortOutSize()
 	
 	rr_RollSort(rr_CurrentRollID)
@@ -1000,7 +1017,7 @@ function RaidRoll_CheckButton_Update_Panel()
 		RR_Display(rr_CurrentRollID)
 	end
 	
-	for i=1,5 do
+	for i=1,10 do
 		_G["Raid_Roll_Rank_String"..i]:SetWidth(65+RaidRoll_DBPC[UnitName("player")]["RR_ExtraWidth"]); 
 	end
 end

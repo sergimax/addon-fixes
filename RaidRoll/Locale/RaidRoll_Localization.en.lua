@@ -3,6 +3,8 @@ RAIDROLL_LOCALE = {}
 
 RAIDROLL_LOCALE["Mark_Them"] = "Are you sure you want to mark %s?"
 RAIDROLL_LOCALE["Enable_Alt_Mode"] = "Enable Alt Mode"
+RAIDROLL_LOCALE["Show_Ten_Players"] = "Show 10 players"
+RAIDROLL_LOCALE["RR_RollCheckBox_ShowTenPlayers"] = "Show 10 players in the roll window.\nTurn off to show 5 players."
 RAIDROLL_LOCALE["Show_Roll_EPGP"] = "Show /roll alongside PR"
 RAIDROLL_LOCALE["RR_RollCheckBox_Show_Roll_EPGP"] = "Shows PR / Roll in EPGP mode.\nThe winner is still chosen by EPGP priority.\n\nRecommended: Off"
 RAIDROLL_LOCALE["Raid_Roll_Misc_Settings"] = "Misc Settings"

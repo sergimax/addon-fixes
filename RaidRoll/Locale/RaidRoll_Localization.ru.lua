@@ -1,6 +1,8 @@
 ﻿
 
 if (GetLocale() == "ruRU") then
+RAIDROLL_LOCALE["Show_Ten_Players"] = "Показывать 10 игроков"
+RAIDROLL_LOCALE["RR_RollCheckBox_ShowTenPlayers"] = "Показывать 10 игроков в окне разролла.\nВыключите, чтобы показывать 5 игроков."
 
 RAIDROLL_LOCALE["Show_Roll_EPGP"] = "Показывать /roll рядом с PR"
 RAIDROLL_LOCALE["RR_RollCheckBox_Show_Roll_EPGP"] = "Показывает PR и результат броска в EPGP-режиме.\nПобедитель по-прежнему определяется по EPGP.\n\nПо умолчанию: выключено"
