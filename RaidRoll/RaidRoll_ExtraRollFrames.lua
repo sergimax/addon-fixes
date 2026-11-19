@@ -45,7 +45,7 @@ function RR_RollFrame_SortOutSize()
 	local rightMargin = showGroups and (math.max(25, groupWidth) + 20) or 15
 	RR_RollFrame:SetWidth(rollX + columnWidth + rightMargin)
 	if RR_RollModeButton then
-		RR_RollModeButton:SetText(settings["RR_EPGP_Enabled"] == true and "EPGP" or "Roll")
+		RR_RollModeButton:SetText(settings["RR_EPGP_Enabled"] == true and "by PR" or "by Roll")
 		Raid_Roll_Name:SetWidth(math.min(150, RR_RollFrame:GetWidth() - 100))
 	end
 end
