@@ -296,9 +296,25 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_ShowTenPlayers:SetScript("OnEnter", function(self) RR_MouseOverTooltip(self:GetName()) end)
 	RR_RollCheckBox_ShowTenPlayers:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
+-- [ ] Show PR and /roll in either roll mode
+	RR_RollCheckBox_Show_Roll_EPGP = CreateFrame("CheckButton", "RR_RollCheckBox_Show_Roll_EPGP", RaidRoll_Panel.panel, "UICheckButtonTemplate")
+	RR_RollCheckBox_Show_Roll_EPGP:SetWidth(20)
+	RR_RollCheckBox_Show_Roll_EPGP:SetHeight(20)
+	RR_RollCheckBox_Show_Roll_EPGP:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft", 30, -220)
+	_G["RR_RollCheckBox_Show_Roll_EPGPText"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Show_Roll_EPGP"])
+	if (GetLocale() ~= "zhTW") then
+		_G["RR_RollCheckBox_Show_Roll_EPGPText"]:SetFont("Fonts\\FRIZQT__.TTF", 12)
+	end
+	if (GetLocale() == "zhCN") then
+		_G["RR_RollCheckBox_Show_Roll_EPGPText"]:SetFont("Fonts\\ZYKai_T.TTF", 15)
+	end
+	RR_RollCheckBox_Show_Roll_EPGP:SetScript("OnClick", RaidRoll_CheckButton_Update_Panel)
+	RR_RollCheckBox_Show_Roll_EPGP:SetScript("OnEnter", function(self) RR_MouseOverTooltip(self:GetName()) end)
+	RR_RollCheckBox_Show_Roll_EPGP:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
 -- EPGP Settings
 	Raid_Roll_EPGP_Settings =  RaidRoll_Panel.panel:CreateFontString("Raid_Roll_EPGP_Settings" ,"ARTWORK","GameFontNormal");
-	Raid_Roll_EPGP_Settings:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft", 20, -230)
+	Raid_Roll_EPGP_Settings:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft", 20, -250)
 	Raid_Roll_EPGP_Settings:SetJustifyH("LEFT")
 	
 	Raid_Roll_EPGP_Settings:SetText("|cFF2459FF" .. RAIDROLL_LOCALE["Raid_Roll_EPGP_Settings"])
@@ -313,7 +329,7 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_EPGPMode_panel = CreateFrame("CheckButton", "RR_RollCheckBox_EPGPMode_panel", RaidRoll_Panel.panel, "UICheckButtonTemplate")
 	RR_RollCheckBox_EPGPMode_panel:SetWidth(20)
 	RR_RollCheckBox_EPGPMode_panel:SetHeight(20)
-	RR_RollCheckBox_EPGPMode_panel:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  30, -250)
+	RR_RollCheckBox_EPGPMode_panel:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  30, -270)
 	_G["RR_RollCheckBox_EPGPMode_panel".."Text"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Enable_EPGP_mode"])
 	if (GetLocale() ~= "zhTW") then
 		_G["RR_RollCheckBox_EPGPMode_panel".."Text"]:SetFont("Fonts\\FRIZQT__.TTF", 12)
@@ -329,7 +345,7 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_EPGPThreshold_panel = CreateFrame("CheckButton", "RR_RollCheckBox_EPGPThreshold_panel", RaidRoll_Panel.panel, "UICheckButtonTemplate")
 	RR_RollCheckBox_EPGPThreshold_panel:SetWidth(15)
 	RR_RollCheckBox_EPGPThreshold_panel:SetHeight(15)
-	RR_RollCheckBox_EPGPThreshold_panel:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  40, -265)
+	RR_RollCheckBox_EPGPThreshold_panel:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  40, -285)
 	_G["RR_RollCheckBox_EPGPThreshold_panel".."Text"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Enable_threshold_levels"])
 	if (GetLocale() ~= "zhTW") then
 		_G["RR_RollCheckBox_EPGPThreshold_panel".."Text"]:SetFont("Fonts\\FRIZQT__.TTF", 10)
@@ -345,7 +361,7 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_Enable_Alt_Mode = CreateFrame("CheckButton", "RR_RollCheckBox_Enable_Alt_Mode", RaidRoll_Panel.panel, "UICheckButtonTemplate")
 	RR_RollCheckBox_Enable_Alt_Mode:SetWidth(15)
 	RR_RollCheckBox_Enable_Alt_Mode:SetHeight(15)
-	RR_RollCheckBox_Enable_Alt_Mode:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  40, -280)
+	RR_RollCheckBox_Enable_Alt_Mode:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  40, -300)
 	_G["RR_RollCheckBox_Enable_Alt_Mode".."Text"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Enable_Alt_Mode"])
 	if (GetLocale() ~= "zhTW") then
 		_G["RR_RollCheckBox_Enable_Alt_Mode".."Text"]:SetFont("Fonts\\FRIZQT__.TTF", 10)
@@ -357,30 +373,9 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_Enable_Alt_Mode:SetScript("OnEnter",function(self) RR_MouseOverTooltip(self:GetName())	end)
 	RR_RollCheckBox_Enable_Alt_Mode:SetScript("OnLeave", function() GameTooltip:Hide()	end)
 
--- [ ] Show /roll alongside PR
-	RR_RollCheckBox_Show_Roll_EPGP = CreateFrame("CheckButton", "RR_RollCheckBox_Show_Roll_EPGP", RaidRoll_Panel.panel, "UICheckButtonTemplate")
-	RR_RollCheckBox_Show_Roll_EPGP:SetWidth(15)
-	RR_RollCheckBox_Show_Roll_EPGP:SetHeight(15)
-	RR_RollCheckBox_Show_Roll_EPGP:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft", 40, -295)
-	_G["RR_RollCheckBox_Show_Roll_EPGPText"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Show_Roll_EPGP"])
-	if (GetLocale() ~= "zhTW") then
-		_G["RR_RollCheckBox_Show_Roll_EPGPText"]:SetFont("Fonts\\FRIZQT__.TTF", 10)
-	end
-	if (GetLocale() == "zhCN") then
-		_G["RR_RollCheckBox_Show_Roll_EPGPText"]:SetFont("Fonts\\ZYKai_T.TTF", 14)
-	end
-	RR_RollCheckBox_Show_Roll_EPGP:SetScript("OnClick", RaidRoll_CheckButton_Update_Panel)
-	RR_RollCheckBox_Show_Roll_EPGP:SetScript("OnEnter", function(self) RR_MouseOverTooltip(self:GetName()) end)
-	RR_RollCheckBox_Show_Roll_EPGP:SetScript("OnLeave", function() GameTooltip:Hide() end)
-	
-	
-	
-	
-
-	
 -- MiscSettings
 	Raid_Roll_Misc_Settings =  RaidRoll_Panel.panel:CreateFontString("Raid_Roll_Misc_Settings" ,"ARTWORK","GameFontNormal");
-	Raid_Roll_Misc_Settings:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft", 240, -230)
+	Raid_Roll_Misc_Settings:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft", 240, -250)
 	Raid_Roll_Misc_Settings:SetJustifyH("LEFT")
 	
 	Raid_Roll_Misc_Settings:SetText("|cFF2459FF" .. RAIDROLL_LOCALE["Raid_Roll_Misc_Settings"])
@@ -394,7 +389,7 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_Track_Bids = CreateFrame("CheckButton", "RR_RollCheckBox_Track_Bids", RaidRoll_Panel.panel, "UICheckButtonTemplate")
 	RR_RollCheckBox_Track_Bids:SetWidth(20)
 	RR_RollCheckBox_Track_Bids:SetHeight(20)
-	RR_RollCheckBox_Track_Bids:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  250, -250)
+	RR_RollCheckBox_Track_Bids:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  250, -270)
 	_G["RR_RollCheckBox_Track_Bids".."Text"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Track_Bids"])
 	if (GetLocale() ~= "zhTW") then
 		_G["RR_RollCheckBox_Track_Bids".."Text"]:SetFont("Fonts\\FRIZQT__.TTF", 12)
@@ -410,7 +405,7 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_Num_Not_Req = CreateFrame("CheckButton", "RR_RollCheckBox_Num_Not_Req", RaidRoll_Panel.panel, "UICheckButtonTemplate")
 	RR_RollCheckBox_Num_Not_Req:SetWidth(15);
 	RR_RollCheckBox_Num_Not_Req:SetHeight(15);
-	RR_RollCheckBox_Num_Not_Req:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  260, -265)
+	RR_RollCheckBox_Num_Not_Req:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  260, -285)
 	_G["RR_RollCheckBox_Num_Not_Req".."Text"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Number not required"])
 	if (GetLocale() ~= "zhTW") then
 		_G["RR_RollCheckBox_Num_Not_Req".."Text"]:SetFont("Fonts\\FRIZQT__.TTF", 10)
@@ -426,7 +421,7 @@ function Setup_RR_Panel()
 	RR_RollCheckBox_Track_EPGPSays = CreateFrame("CheckButton", "RR_RollCheckBox_Track_EPGPSays", RaidRoll_Panel.panel, "UICheckButtonTemplate")
 	RR_RollCheckBox_Track_EPGPSays:SetWidth(20)
 	RR_RollCheckBox_Track_EPGPSays:SetHeight(20)
-	RR_RollCheckBox_Track_EPGPSays:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  250, -280)
+	RR_RollCheckBox_Track_EPGPSays:SetPoint("TopLeft", RaidRoll_Panel.panel, "TopLeft",  250, -300)
 	_G["RR_RollCheckBox_Track_EPGPSays".."Text"]:SetText("|cFFFFFFFF" .. RAIDROLL_LOCALE["Track_EPGPSays"])
 	if (GetLocale() ~= "zhTW") then
 		_G["RR_RollCheckBox_Track_EPGPSays".."Text"]:SetFont("Fonts\\FRIZQT__.TTF", 12)
@@ -462,7 +457,7 @@ function Setup_RR_Panel()
 
  -- Set Scale
 	Raid_Roll_ScalePanelName_String =  RaidRoll_Panel.panel:CreateFontString("Raid_Roll_ScalePanelName_String" ,"ARTWORK","GameFontNormal");
-	Raid_Roll_ScalePanelName_String:SetPoint("TopLeft", RaidRoll_Panel.panel, "TOPLEFT", 10, -310)
+	Raid_Roll_ScalePanelName_String:SetPoint("TopLeft", RaidRoll_Panel.panel, "TOPLEFT", 10, -330)
 	Raid_Roll_ScalePanelName_String:SetJustifyH("LEFT")
 	
 	Raid_Roll_ScalePanelName_String:SetText("|cFF69CCF0" .. RAIDROLL_LOCALE["Set_Scale"])
@@ -476,7 +471,7 @@ function Setup_RR_Panel()
  RaidRoll_Scale_Slider = CreateFrame("Slider", "RaidRoll_Scale_Slider", RaidRoll_Panel.panel, "OptionsSliderTemplate")
  RaidRoll_Scale_Slider:SetWidth(300)
  RaidRoll_Scale_Slider:SetHeight( 20 )
- RaidRoll_Scale_Slider:SetPoint('TOPLEFT', 20, -335)
+ RaidRoll_Scale_Slider:SetPoint('TOPLEFT', 20, -355)
  RaidRoll_Scale_Slider:SetOrientation('HORIZONTAL')
  
 
@@ -512,7 +507,7 @@ function Setup_RR_Panel()
 
  -- Set Extra Rank Width
 	Raid_Roll_PanelName_String =  RaidRoll_Panel.panel:CreateFontString("Raid_Roll_PanelName_String" ,"ARTWORK","GameFontNormal");
-	Raid_Roll_PanelName_String:SetPoint("TopLeft", RaidRoll_Panel.panel, "TOPLEFT", 10, -365)
+	Raid_Roll_PanelName_String:SetPoint("TopLeft", RaidRoll_Panel.panel, "TOPLEFT", 10, -385)
 	Raid_Roll_PanelName_String:SetJustifyH("LEFT")
 	
 	Raid_Roll_PanelName_String:SetText("|cFF69CCF0" .. RAIDROLL_LOCALE["Set_Extra_Rank_Width"])
@@ -526,7 +521,7 @@ function Setup_RR_Panel()
  RaidRoll_ExtraWidth_Slider = CreateFrame("Slider", "RaidRoll_ExtraWidth_Slider", RaidRoll_Panel.panel, "OptionsSliderTemplate")
  RaidRoll_ExtraWidth_Slider:SetWidth(200)
  RaidRoll_ExtraWidth_Slider:SetHeight( 20 )
- RaidRoll_ExtraWidth_Slider:SetPoint('TOPLEFT', 20, -390)
+ RaidRoll_ExtraWidth_Slider:SetPoint('TOPLEFT', 20, -410)
  RaidRoll_ExtraWidth_Slider:SetOrientation('HORIZONTAL')
  
 
@@ -559,7 +554,7 @@ function Setup_RR_Panel()
 
  -- Set Extra Rank Width
 	Raid_Roll_PanelName_String =  RaidRoll_Panel.panel:CreateFontString("Raid_Roll_PanelName_String" ,"ARTWORK","GameFontNormal");
-	Raid_Roll_PanelName_String:SetPoint("TopLeft", RaidRoll_Panel.panel, "TOPLEFT", 220, -365)
+	Raid_Roll_PanelName_String:SetPoint("TopLeft", RaidRoll_Panel.panel, "TOPLEFT", 220, -385)
 	Raid_Roll_PanelName_String:SetJustifyH("LEFT")
 	
 	Raid_Roll_PanelName_String:SetText("|cFF69CCF0" .. RAIDROLL_LOCALE["Set_Rolling_Time"])
@@ -573,7 +568,7 @@ function Setup_RR_Panel()
  RaidRoll_Rolling_Time_Slider = CreateFrame("Slider", "RaidRoll_Rolling_Time_Slider", RaidRoll_Panel.panel, "OptionsSliderTemplate")
  RaidRoll_Rolling_Time_Slider:SetWidth(130)
  RaidRoll_Rolling_Time_Slider:SetHeight( 20 )
- RaidRoll_Rolling_Time_Slider:SetPoint('TOPLEFT', 230, -390)
+ RaidRoll_Rolling_Time_Slider:SetPoint('TOPLEFT', 230, -410)
  RaidRoll_Rolling_Time_Slider:SetOrientation('HORIZONTAL')
  
 

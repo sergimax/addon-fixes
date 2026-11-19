@@ -91,7 +91,7 @@ for _, ranks in ipairs({ false, true }) do
                     assert(RR_RollFrame.height == (tenRows and 215 or 155))
                     assert(RR_Roller10.shown == tenRows)
                     assert(RR_Group0.shown == groups and Raid_Roll_Rank_String0.shown == ranks)
-                    assert(RR_RollModeButton.text == (mode == "Roll" and "Roll" or "EPGP"))
+                    assert(RR_RollModeButton.text == (mode == "Roll" and "by Roll" or "by PR"))
                     local width = RR_RollFrame.width
                     RR_RollFrame_SortOutSize()
                     assert(RR_RollFrame.width == width, "repeated sizing must not grow the frame")

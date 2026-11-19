@@ -1068,7 +1068,8 @@ function rr_RollSort(rr_rollID,PlayerRoll,PlayerName,rr_AddedPlayer,rr_FirstRoll
 		
 
 local temp
-local MaxPlayersValue = math.max(5, MaxPlayers[rr_rollID] or 0)
+-- Startup has no roll data yet; only sort lists initialized by adding a roll.
+local MaxPlayersValue = MaxPlayers[rr_rollID] and math.max(5, MaxPlayers[rr_rollID])
 
 --if rr_rollID == nil then rr_rollID = rr_CurrentRollID end 
 
@@ -1704,6 +1705,30 @@ function RR_FindWinner(rollID)
 end
 
 
+-- Display settings are independent of the mode used to sort and choose a winner.
+function RR_GetRollColumnHeader()
+	local settings = RaidRoll_DBPC[UnitName("player")]
+	if settings["RR_Show_Roll_EPGP"] == true then return "PR / Roll" end
+	return settings["RR_EPGP_Enabled"] == true and "PR" or "Roll"
+end
+
+function RR_GetRollColumnText(rollID, index, color)
+	if RollerRoll[rollID][index] == 0 then return "" end
+	local settings = RaidRoll_DBPC[UnitName("player")]
+	local rollText = tostring(RollerRoll[rollID][index])
+	if RaidRoll_LegitRoll[rollID][index] ~= true then rollText = rollText .. "*" end
+	if RollerFirst[rollID][index] ~= true then
+		rollText = "(" .. Roll_Number[rollID][index] .. ") " .. rollText
+	end
+	local prColor = RR_EPGPAboveThreshold[rollID][index] == true and "|cFFABD473" or "|cFFC41F3B"
+	local prText = prColor .. RR_EPGP_PRValue[rollID][index]
+	if settings["RR_Show_Roll_EPGP"] == true then
+		return prText .. "|r / " .. color .. rollText .. "|r"
+	end
+	if settings["RR_EPGP_Enabled"] == true then return prText end
+	return color .. rollText
+end
+
 function RR_Display(RR_DisplayID)
 
 
@@ -1800,46 +1825,8 @@ l_RR_DisplayID = RR_DisplayID
 					_G["RR_Roller"..i]:SetText(color .. mark ..  RollerName[RR_DisplayID][i+RR_ScrollOffset])
 				end
 				
-				if RollerRoll[RR_DisplayID][i+RR_ScrollOffset] == 0 then
-					_G["RR_Rolled"..i]:SetText("")
-				else
-					if RaidRoll_DBPC[UnitName("player")]["RR_EPGP_Enabled"] == true then
-						-- Display epgp values instead of rolls
-						RR_Rolled:SetText("PR")
-						if RR_EPGPAboveThreshold[RR_DisplayID][i+RR_ScrollOffset] ~= true then
-							_G["RR_Rolled"..i]:SetText("|cFFC41F3B" .. RR_EPGP_PRValue[RR_DisplayID][i+RR_ScrollOffset])	-- not above threshold (red)
-						else
-							_G["RR_Rolled"..i]:SetText("|cFFABD473" .. RR_EPGP_PRValue[RR_DisplayID][i+RR_ScrollOffset])	-- above threshold (green)
-						end
-						if RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"] == true then
-							local rollText = RollerRoll[RR_DisplayID][i+RR_ScrollOffset]
-							if RaidRoll_LegitRoll[RR_DisplayID][i+RR_ScrollOffset] ~= true then
-								rollText = rollText .. "*"
-							end
-							if RollerFirst[RR_DisplayID][i+RR_ScrollOffset] ~= true then
-								rollText = "(" .. Roll_Number[RR_DisplayID][i+RR_ScrollOffset] .. ") " .. rollText
-							end
-							_G["RR_Rolled"..i]:SetText(_G["RR_Rolled"..i]:GetText() .. "|r / " .. color .. rollText .. "|r")
-						end
-					else
-						RR_Rolled:SetText("Roll")
-						if RaidRoll_LegitRoll[RR_DisplayID][i+RR_ScrollOffset] == true then
-							ExtraChar = ""
-						else
-							ExtraChar = "*"
-						end
-						
-						
-						
-						if RollerFirst[RR_DisplayID][i+RR_ScrollOffset] == true then
-							_G["RR_Rolled"..i]:SetText(color .. RollerRoll[RR_DisplayID][i+RR_ScrollOffset] .. ExtraChar)
-						else
-							_G["RR_Rolled"..i]:SetText(color .. "(" .. Roll_Number[RR_DisplayID][i+RR_ScrollOffset] .. ") " .. RollerRoll[RR_DisplayID][i+RR_ScrollOffset] .. ExtraChar)
-						end
-					end
-				end
-				
-				
+				_G["RR_Rolled"..i]:SetText(RR_GetRollColumnText(RR_DisplayID, i+RR_ScrollOffset, color))
+
 				if RollerRankIndex[RR_DisplayID][i+RR_ScrollOffset] == 99 then
 					_G["Raid_Roll_Rank_String"..i]:SetText("")
 				else
@@ -1864,13 +1851,7 @@ l_RR_DisplayID = RR_DisplayID
 		end
 	end
 
-	if RaidRoll_DBPC[UnitName("player")]["RR_EPGP_Enabled"] == true and RaidRoll_DBPC[UnitName("player")]["RR_Show_Roll_EPGP"] == true then
-		RR_Rolled:SetText("PR / Roll")
-	elseif RaidRoll_DBPC[UnitName("player")]["RR_EPGP_Enabled"] == true then
-		RR_Rolled:SetText("PR")
-	else
-		RR_Rolled:SetText("Roll")
-	end
+	RR_Rolled:SetText(RR_GetRollColumnHeader())
 	RR_RollFrame_SortOutSize()
 
 	-- This controls the showing of the window (true = show window, false = dont show window)
